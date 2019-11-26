@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotpressUiPath
+namespace Botpress
 {
     public class Class1
     {
