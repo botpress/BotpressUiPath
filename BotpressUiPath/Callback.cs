@@ -15,6 +15,7 @@ namespace Botpress
         private class ResponsePayload
         {
             public string text { get; set; }
+            public object message { get; set; }
             public string channel { get; set; }
             public string target { get; set; }
             public string botId { get; set; }
@@ -36,7 +37,11 @@ namespace Botpress
 
         [Category("Message")]
         [RequiredArgument]
-        public InArgument<string> Text { get; set; }
+        public InArgument<object> Message { get; set; }
+
+        [Category("Response")]
+        [RequiredArgument]
+        public InArgument<string> BotpressToken { get; set; }
 
         [Category("Response")]
         [RequiredArgument]
@@ -52,38 +57,32 @@ namespace Botpress
 
         protected override void Execute(CodeActivityContext context)
         {
-            var protocol = Protocol.Get(context);
-            var host = Host.Get(context);
-            var port = Port.Get(context);
-            var text = Text.Get(context);
-
-            var payload = new ResponsePayload
+            var content = new ResponsePayload
             {
-                text = text,
+                message = Message.Get(context),
                 target = Target.Get(context),
                 channel = Channel.Get(context),
                 botId = BotId.Get(context)
             };
 
-            string json = JsonConvert.SerializeObject(payload);
-            Console.WriteLine(json);
+            var url = $"{Protocol.Get(context)}://{Host.Get(context)}:{Port.Get(context)}/api/v1/bots/___/mod/uipath/message";
 
-            var url = $"{protocol}://{host}:{port}/api/v1/bots/___/mod/uipath/message";
-
-            var response = client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).Result;
-            Console.WriteLine(response.StatusCode);
-            Console.WriteLine(response.Content);
-            if (response.IsSuccessStatusCode)
+            using (var client = new HttpClient())
+            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             {
-                var responseContent = response.Content;
+                request.Headers.Add("Authorization", $"bearer {BotpressToken.Get(context)}");
+                var json = JsonConvert.SerializeObject(content);
+                using (var stringContent = new StringContent(json, Encoding.UTF8, "application/json"))
+                {
+                    request.Content = stringContent;
 
-                // by calling .Result you are synchronously reading the result
-                string responseString = responseContent.ReadAsStringAsync().Result;
-
-                Console.WriteLine(responseString);
-            } else
-            {
-                throw new System.InvalidOperationException($"Botpress responded with status code: {response.StatusCode}");
+                    using (var response = client.SendAsync(request).Result)
+                    {
+                        Console.WriteLine(response.StatusCode);
+                        Console.WriteLine(response.Content);
+                        response.EnsureSuccessStatusCode();
+                    }
+                }
             }
         }
     }
