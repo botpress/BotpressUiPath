@@ -38,6 +38,18 @@ namespace Botpress
         [RequiredArgument]
         public InArgument<string> Text { get; set; }
 
+        [Category("Response")]
+        [RequiredArgument]
+        public InArgument<string> Channel { get; set; }
+
+        [Category("Response")]
+        [RequiredArgument]
+        public InArgument<string> BotId { get; set; }
+
+        [Category("Response")]
+        [RequiredArgument]
+        public InArgument<string> Target { get; set; }
+
         protected override void Execute(CodeActivityContext context)
         {
             var protocol = Protocol.Get(context);
@@ -48,9 +60,9 @@ namespace Botpress
             var payload = new ResponsePayload
             {
                 text = text,
-                target = "EjfoxTkBpxCF0v3j3wn0",
-                channel = "web",
-                botId = "uipathbot"
+                target = Target.Get(context),
+                channel = Channel.Get(context),
+                botId = BotId.Get(context)
             };
 
             string json = JsonConvert.SerializeObject(payload);
@@ -69,6 +81,9 @@ namespace Botpress
                 string responseString = responseContent.ReadAsStringAsync().Result;
 
                 Console.WriteLine(responseString);
+            } else
+            {
+                throw new System.InvalidOperationException($"Botpress responded with status code: {response.StatusCode}");
             }
         }
     }
