@@ -68,7 +68,7 @@ namespace Botpress
             string json = JsonConvert.SerializeObject(payload);
             Console.WriteLine(json);
 
-            var url = $"{protocol}://{host}:{port}/api/v1/bots/___/mod/uipath/callback";
+            var url = $"{protocol}://{host}:{port}/api/v1/bots/___/mod/uipath/message";
 
             var response = client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).Result;
             Console.WriteLine(response.StatusCode);
