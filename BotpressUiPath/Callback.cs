@@ -78,8 +78,6 @@ namespace Botpress
 
                     using (var response = client.SendAsync(request).Result)
                     {
-                        Console.WriteLine(response.StatusCode);
-                        Console.WriteLine(response.Content);
                         response.EnsureSuccessStatusCode();
                     }
                 }
