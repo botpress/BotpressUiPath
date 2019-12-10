@@ -25,15 +25,7 @@ namespace Botpress
 
         [Category("Connection")]
         [RequiredArgument]
-        public InArgument<string> Protocol { get; set; }
-
-        [Category("Connection")]
-        [RequiredArgument]
-        public InArgument<string> Host { get; set; }
-
-        [Category("Connection")]
-        [RequiredArgument]
-        public InArgument<int> Port { get; set; }
+        public InArgument<string> ExternalURL { get; set; }
 
         [Category("Message")]
         [RequiredArgument]
@@ -65,7 +57,7 @@ namespace Botpress
                 botId = BotId.Get(context)
             };
 
-            var url = $"{Protocol.Get(context)}://{Host.Get(context)}:{Port.Get(context)}/api/v1/bots/___/mod/uipath/message";
+            var url = $"{ExternalURL.Get(context)}/api/v1/bots/___/mod/uipath/message";
 
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
