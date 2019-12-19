@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace Botpress
 {
-    public class Callback : CodeActivity
+    public class SendMessage : CodeActivity
     {
         private class ResponsePayload
         {
