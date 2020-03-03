@@ -7,8 +7,8 @@
     <ProjectGuid>{CFF57CC9-4A57-4940-B71E-83D1684BDDAB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BotpressUiPath</RootNamespace>
-    <AssemblyName>BotpressUiPath</AssemblyName>
+    <RootNamespace>BotpressForUiPath</RootNamespace>
+    <AssemblyName>BotpressForUiPath</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
